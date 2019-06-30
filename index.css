@@ -1,0 +1,54 @@
+body {
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+header {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+.root {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 1000px;
+  margin: 0 auto;
+}
+svg {
+  position: relative;
+}
+.tooltip {
+  border-radius: 5px;
+  padding: 5px;
+  box-sizing: border-box;
+  width: 100px;
+  text-align: left;
+  font-size: 11px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+}
+.money {
+  color: rgb(77, 221, 94);
+  text-align: center;
+}
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent black transparent;
+}
+.apple-img {
+  height: 35px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
