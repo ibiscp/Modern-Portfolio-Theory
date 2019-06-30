@@ -2,6 +2,15 @@ var workDays = 261
 var period = 236
 const parseTime = d3.utcParse("%d-%b-%y");
 
+// create tooltip
+const tooltip = d3.select(".root")
+  .append("div")
+    .attr("class", "tooltip")
+    .style("opacity", "0")
+    .style("display", "none")
+    .style("position", "absolute")
+    .style('z-index', '1000000');
+
 // get data
 d3.csv("dataset/test2.csv")
   .then(data => {
@@ -48,45 +57,69 @@ d3.csv("dataset/test2.csv")
         mpt_data.push({risk: annual_risk, return: annual_return, asset_1: Math.round((1-i)*100), asset_2: Math.round(i*100)})
      }
 
+    // Graph information
     const margin = {top: 20, right: 50, bottom: 40, left: 50};
-    const width = 700;
-    const height = 400;
+    const width = 900 - margin.left - margin.right;
+    const height = 500 - margin.top - margin.bottom;
 
-    const svg = d3.select('.root')
+    const mpt = d3.select('.root')
       .append('svg')
         .attr('width', width)
         .attr('height', height)
         .style('position', 'relative');
 
+    // Graph margins
     x_margin = (d3.max(mpt_data, d => d.risk) - d3.min(mpt_data, d => d.risk)) * 0.1
     y_margin = (d3.max(mpt_data, d => d.return) - d3.min(mpt_data, d => d.return)) * 0.1
 
+    // Build X scales and axis
     const x = d3.scaleLinear()
       .domain([d3.min(mpt_data, d => d.risk) - x_margin, d3.max(mpt_data, d => d.risk) + x_margin])
       .range([margin.left, width - margin.right]);
+    mpt.append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0,${height - margin.bottom})`)
+      .call(d3.axisBottom(x)
+        .ticks(width / 80));
 
+    // Build Y scales and axis
     const y = d3.scaleLinear()
       .domain([d3.min(mpt_data, d => d.return) - y_margin, d3.max(mpt_data, d => d.return) + y_margin])
       .range([height - margin.bottom, margin.top]);
+    mpt.append("g")
+      .attr("class", "y-axis")
+      .attr("transform", `translate(${margin.left},0)`)
+      .call(d3.axisLeft(y));
 
-    // generate line
-    const line = d3.line()
+    // Generate line
+    const mpt_line = d3.line()
       .x(d => x(d.risk))
       .y(d => y(d.return))
       .curve(d3.curveCatmullRom.alpha(0.5));
 
     // Add the line
-    svg.append("path")
+    mpt.append("path")
       .data([mpt_data])
       .attr("fill", "none")
       .attr("stroke", "steelblue")
       .attr("stroke-width", 1.5)
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
-      .attr("d", line);
+      .attr("d", mpt_line);
+
+    // Add efficient frontier
+    mpt.append("line")
+      .attr("x1", x(d3.min(mpt_data, d => d.risk)))
+      .attr("y1", 0 + margin.top)
+      .attr("x2", x(d3.min(mpt_data, d => d.risk)))
+      .attr("y2", height - margin.bottom)
+      .style("stroke-width", 2)
+      .style("stroke-dasharray", ("3, 3"))
+      .style("stroke", "red")
+      .style("fill", "none");
 
     // Add the dots
-    svg.selectAll("dot")
+    mpt.selectAll("dot")
         .data(mpt_data)
       .enter().append("circle")
         .attr("r", 4)
@@ -101,128 +134,33 @@ d3.csv("dataset/test2.csv")
                         <br>
                         <div>Risk: ${parseFloat(d.risk).toFixed(2)} %</div>
                         <div>Return: ${parseFloat(d.return).toFixed(2)} %</div></div>`)
-          // tooltip.html("<p>Risk: " + parseFloat(d.risk).toFixed(2) + " %</p> <p>Return: " + parseFloat(d.return).toFixed(2) + " %</p>")
             .style('display', 'block')
             .style('opacity', '1')
-            .style('left', xCoord - margin.left)
-            .style('top', yCoord + margin.top);
+            .style('left', xCoord + 50)
+            .style('top', yCoord + 10);
           })
         .on("mouseleave", function() {
           tooltip.style("opacity", "0")
            .style("display", "none")
           });
 
-    // Add efficient frontier
-    svg.append("line")
-      .attr("x1", x(d3.min(mpt_data, d => d.risk)))
-      .attr("y1", 0 + margin.top)
-      .attr("x2", x(d3.min(mpt_data, d => d.risk)))
-      .attr("y2", height - margin.bottom)
-      .style("stroke-width", 2)
-      .style("stroke-dasharray", ("3, 3"))
-      .style("stroke", "red")
-      .style("fill", "none");
-
-    // create axes groups
-    const xAxisGroup = svg.append("g")
-      .attr("class", "x-axis")
-      .attr("transform", `translate(0,${height - margin.bottom})`);
-
-    const yAxisGroup = svg.append("g")
-      .attr("class", "y-axis")
-      .attr("transform", `translate(${margin.left},0)`);
-
-    // create axes
-    const xAxis = d3.axisBottom(x)
-      .ticks(width / 80)
-
-    const yAxis = d3.axisLeft(y);
-
-    // call axes
-    xAxisGroup.call(xAxis);
-    yAxisGroup.call(yAxis);
-
-    // create y-axis legend
-    const yLegend = svg.append("text")
+    // Creates legends
+    const yLegend = mpt.append("text")
       .attr("y", 15)
       .attr("x", 0)
       .style("font-family", "sans-serif")
       .style("font-size", "14px")
       .text("Return %");
 
-    const xLegend = svg.append("text")
+    const xLegend = mpt.append("text")
       .attr("y", height)
       .attr("x", 450)
       .style("font-family", "sans-serif")
       .style("font-size", "14px")
       .text("Risk %");
 
-    // create tooltip
-    const tooltip = d3.select(".root")
-      .append("div")
-        .attr("class", "tooltip")
-        .style("opacity", "0")
-        .style("display", "none")
-        .style("position", "absolute")
-        .style('z-index', '1000000');
-
-    // // tooltip events
-    // svg.on("touchmove mousemove", function() {
-    //   let coords = d3.mouse(this);
-    //   let xCoord = coords[0], yCoord = coords[1];
-    //   let risk = x.invert(xCoord);
-    //   // let value = y.invert(yCoord);
-    //   let value = getValue(mpt_data,risk);
-    //   let rounded = Math.ceil(value * 100) / 100;
-    //   if (!rounded) return;
-    //
-    //   tooltip.html(`<div class="tooltiptext"><div class="money"><b>$${rounded}</b></div><div>${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}</div></div>`)
-    //     .style('display', 'block')
-    //     .style('opacity', '1')
-    //     .style('left', xCoord - margin.left)
-    //     .style('top', y(value) + margin.top)
-    // });
-
-    // svg.on("touchend mouseleave", function() {
-    //   tooltip.style("opacity", "0")
-    //    .style("display", "none")
-    // });
-    // // make tooltip stay put when it is hovered over
-    // tooltip.on("touchmove mousemove", function() {
-    //   let coords = d3.mouse(this);
-    //   let xCoord = coords[0], yCoord = coords[1];
-    //   let date = x.invert(xCoord);
-    //   let value = getValue(data,date);
-    //   let rounded = Math.ceil(value * 100) / 100;
-    //   if (!rounded) return;
-    //
-    //   let xVal = xCoord - margin.left;
-    //   let yVal = y(value) + margin.top;
-    //
-    //   tooltip.html(`<div class="tooltiptext"><div class="money"><b>$${rounded}</b></div><div>${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}</div></div>`)
-    //     .style('display', 'block')
-    //     .style('opacity', '1')
-    //     // .style('left', `${xVal}px`)
-    //     // .style('top', `${yVal}px`)
-    // });
   })
   .catch(err => console.log(err));
-
-var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-];
-
-var getValue = (data, x) => {
-  var sameDate = (a,b) => (a.getDate() === b.getDate()) && (a.getMonth() === b.getMonth()) && (a.getFullYear() === b.getFullYear());
-  for (let i = 0; i < data.length; i++) {
-    let same = sameDate(data[i].date, date);
-    if (same) {
-      return data[i].value;
-    } else {
-      continue;
-    }
-  }
-};
 
 // Calculate the return of one day in respect of the previous one
 function dailyChange(values){
