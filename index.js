@@ -1,24 +1,25 @@
-workDays = 261
+var workDays = 261
+var period = 236
+const parseTime = d3.utcParse("%d-%b-%y");
 
 // get data
 d3.csv("dataset/test2.csv")
   .then(data => {
-    const parseTime = d3.utcParse("%d-%b-%y");
-    data = data.map(row => {
-      return {
-        date: parseTime(row["Date"]),
-        slg: +row["BOVA11"],
-        usa: +row["FIXX11"],
-        sep: +row["S&P"]
-      };
-    });
 
     // Asset names
     var asset_1 = "BOVA11"
     var asset_2 = "FIXX11"
 
+    // Get data from csv
+    data = data.map(row => {
+      return {
+        date: parseTime(row["Date"]),
+        slg: +row["BOVA11"],
+        usa: +row["FIXX11"]
+      };
+    });
+
     // Prepare data
-    var period = 236
     var data_1 = data.slice(0, period).map(function(value){return value.slg;});
     var data_2 = data.slice(0, period).map(function(value){return value.usa;});
 
@@ -48,8 +49,8 @@ d3.csv("dataset/test2.csv")
      }
 
     const margin = {top: 20, right: 50, bottom: 40, left: 50};
-    const width = 1000;
-    const height = 500;
+    const width = 700;
+    const height = 400;
 
     const svg = d3.select('.root')
       .append('svg')
@@ -74,7 +75,7 @@ d3.csv("dataset/test2.csv")
       .y(d => y(d.return))
       .curve(d3.curveCatmullRom.alpha(0.5));
 
-    // generate path for line
+    // Add the line
     svg.append("path")
       .data([mpt_data])
       .attr("fill", "none")
@@ -84,7 +85,7 @@ d3.csv("dataset/test2.csv")
       .attr("stroke-linecap", "round")
       .attr("d", line);
 
-    // Add the scatterplot
+    // Add the dots
     svg.selectAll("dot")
         .data(mpt_data)
       .enter().append("circle")
@@ -95,8 +96,8 @@ d3.csv("dataset/test2.csv")
           let coords = d3.mouse(this);
           let xCoord = coords[0], yCoord = coords[1];
           tooltip.html(`<div class="tooltiptext">
-                        <div class="money"><b>${asset_1}  ${d.asset_1} %</b></div>
-                        <div class="money"><b>${asset_2}  ${d.asset_2} %</b></div>
+                        <div class="money"><b>${asset_1} - ${d.asset_1} %</b></div>
+                        <div class="money"><b>${asset_2} - ${d.asset_2} %</b></div>
                         <br>
                         <div>Risk: ${parseFloat(d.risk).toFixed(2)} %</div>
                         <div>Return: ${parseFloat(d.return).toFixed(2)} %</div></div>`)
@@ -110,6 +111,17 @@ d3.csv("dataset/test2.csv")
           tooltip.style("opacity", "0")
            .style("display", "none")
           });
+
+    // Add efficient frontier
+    svg.append("line")
+      .attr("x1", x(d3.min(mpt_data, d => d.risk)))
+      .attr("y1", 0 + margin.top)
+      .attr("x2", x(d3.min(mpt_data, d => d.risk)))
+      .attr("y2", height - margin.bottom)
+      .style("stroke-width", 2)
+      .style("stroke-dasharray", ("3, 3"))
+      .style("stroke", "red")
+      .style("fill", "none");
 
     // create axes groups
     const xAxisGroup = svg.append("g")
