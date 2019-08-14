@@ -8,13 +8,31 @@ header {
   margin-top: 50px;
   margin-bottom: 50px;
 }
-.root {
+.mpt {
   display: flex;
   justify-content: center;
   position: relative;
-  width: 1000px;
-  margin: 0 auto;
+  width: 100%;
+  height: 400px;
+  margin-top: 20px;
 }
+.dca {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 400px;
+  margin-top: 20px;
+}
+.history {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 400px;
+  margin-top: 20px;
+}
+
 svg {
   position: relative;
 }
@@ -22,7 +40,7 @@ svg {
   border-radius: 5px;
   padding: 5px;
   box-sizing: border-box;
-  width: 100px;
+  width: 120px;
   text-align: left;
   font-size: 11px;
   background-color: rgba(0, 0, 0, 0.8);
@@ -42,13 +60,120 @@ svg {
   border-style: solid;
   border-color: transparent transparent black transparent;
 }
-.apple-img {
-  height: 35px;
-  margin-bottom: 8px;
-  margin-right: 8px;
-}
 h1 {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.row {
+  display: flex;
+}
+
+.col {
+  flex: 100%;
+  padding: 5px;
+}
+
+.block {
+  display: block;
+  width: 100%;
+  border: none;
+  background-color: #d4d4d4;
+  padding: 15px;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+
+
+
+/* .card {
+
+    margin-bottom: 2rem;
+    box-shadow: none;
+
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #e5e9f2;
+    border-radius: .2rem;
+
+    font-family: Nunito Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    text-align: left;
+
+} */
+form { display: flex; }
+
+.form-group > * {
+   display: inline-block;
+}
+
+
+
+
+
+
+
+
+* { box-sizing: border-box; }
+body {
+  font: 16px Arial;
+}
+.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+.autocomplete input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+}
+input[type=text] {
+  background-color: #f1f1f1;
+  width: 100%;
+}
+input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+}
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9;
+}
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important;
+  color: #ffffff;
 }

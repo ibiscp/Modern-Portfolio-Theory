@@ -13,9 +13,115 @@
     </h1>
     <h5>*hover for interactive tooltip*</h5>
   </header>
-  <div class="root"></div>
+
+  <!--Make sure the form has the autocomplete function switched off:-->
+  <div class="row">
+    <div class="col">
+      <form autocomplete="off">
+        <div class="autocomplete">
+          <input id="asset1" type="text" name="asset1" placeholder="First Asset">
+        </div>
+      </form>
+    </div>
+    <div class="col">
+      <form autocomplete="off">
+        <div class="autocomplete">
+          <input id="asset2" type="text" name="asset2" placeholder="Second Asset">
+        </div>
+      </form>
+    </div>
+</div>
+
+<button onclick="plotMPT()" type="button" class="block">Evaluate</button>
+
+<center><h2>Risk return graph</h2></center>
+  <div id="mpt" class="mpt"></div>
+
+  <center><h2>History graph</h2></center>
+  <div id="history" class="history"></div>
+
+  <center><h2>Dollar cost averaging</h2></center>
+
+  <!-- <div class="row">
+    <div class="col" width="30%">
+
+<center><h2>Risk return graph</h2></center>
+
+    </div>
+    <div class="col" width="70%">
+
+    </div>
+  </div> -->
+
+
+  <table style="height: 400px; width: 100%;">
+  <colgroup>
+    <col width="20%">
+    <col width="80%">
+   </colgroup>
+      <tr>
+        <td style="border: 0; padding: 0; margin: 0; vertical-align: top;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">DCA Settings</h2></div>
+                    <div class="card-body">
+                        <form>
+                            <fieldset style="border: 0">
+                                <div class="form-group">
+                                      <label class="">Starting Amount</label>
+                                      <input onchange="calculateDCA()" id="startingAmount" placeholder="" min="1" max="100000" step="1" type="number" value="10000">
+                                </div>
+                                <div class="form-group">
+                                      <label class="">Contribution Amount</label>
+                                      <input onchange="calculateDCA()" id="contributionAmount" placeholder="" min="1" max="10000" step="1" type="number" value="100">
+                                </div>
+                                <div class="form-group">
+                                    <label class="">Repeat Purchase</label>
+                                    <select onchange="calculateDCA()" name="frequency">
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="every_two_weeks">Every two weeks</option>
+                                        <option value="monthly">Monthly</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="">Starting</label>
+                                    <select onchange="calculateDCA()" name="startDateAgo" class="form-control-lg form-control">
+                                        <option value="6_months">6 Months Ago</option>
+                                        <option value="1_year">1 Year Ago</option>
+                                        <option value="2_years">2 Years Ago</option>
+                                        <option value="3_years">3 Years Ago</option>
+                                        <option value="4_years">4 Years Ago</option>
+                                        <option value="5_years">5 Years Ago</option>
+                                        <option value="6_years">6 Years Ago</option>
+                                        <option value="7_years">7 Years Ago</option>
+                                        <option value="8_years">8 Years Ago</option>
+                                        <option value="9_years">9 Years Ago</option>
+                                        <option value="custom">On Specific Date</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+        </td>
+        <td>
+          <div id="dca" class="dca"></div>
+        </td>
+      </tr>
+    </table>
+
+
   <script src="https://d3js.org/d3.v5.min.js"></script>
-  <script src="d3/math.min.js"></script>
-  <script src="index.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.2/math.min.js"></script>
+  <script src="d3/jquery.csv.min.js"></script>
+  <script src="d3/pca.min.js"></script>
+
+  <!-- <script src="pca.js"></script> -->
+  <!-- <script src="index.js"></script> -->
+  <script src="autocomplete.js"></script>
+  <script src="riskreturn.js"></script>
+  <script src="dca.js"></script>
+  <script src="history.js"></script>
 </body>
 </html>
