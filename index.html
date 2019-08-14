@@ -15,7 +15,7 @@
   </header>
 
   <!--Make sure the form has the autocomplete function switched off:-->
-  <div class="row">
+  <!-- <div class="row">
     <div class="col">
       <form autocomplete="off">
         <div class="autocomplete">
@@ -30,7 +30,29 @@
         </div>
       </form>
     </div>
-</div>
+</div> -->
+
+
+<table style="width:100%" cellspacing="0" cellpadding="0" cellspacing="10">
+<!-- <table style="width:100%"> -->
+  <tr>
+    <td>
+      <form autocomplete="off" style="padding: 0px 5px 0px 0px">
+        <div class="autocomplete">
+          <input id="asset1" type="text" name="asset1" placeholder="First Asset">
+        </div>
+      </form>
+    </td>
+    <td>
+      <form autocomplete="off" style="padding: 0px 0px 0px 5px">
+        <div class="autocomplete">
+          <input id="asset2" type="text" name="asset2" placeholder="Second Asset">
+        </div>
+      </form>
+    </td>
+  </tr>
+</table>
+
 
 <button onclick="plotMPT()" type="button" class="block">Evaluate</button>
 
@@ -41,18 +63,6 @@
   <div id="history" class="history"></div>
 
   <center><h2>Dollar cost averaging</h2></center>
-
-  <!-- <div class="row">
-    <div class="col" width="30%">
-
-<center><h2>Risk return graph</h2></center>
-
-    </div>
-    <div class="col" width="70%">
-
-    </div>
-  </div> -->
-
 
   <table style="height: 400px; width: 100%;">
   <colgroup>
@@ -69,24 +79,24 @@
                             <fieldset style="border: 0">
                                 <div class="form-group">
                                       <label class="">Starting Amount</label>
-                                      <input onchange="calculateDCA()" id="startingAmount" placeholder="" min="1" max="100000" step="1" type="number" value="10000">
+                                      <input id="startingAmount" placeholder="" min="1" max="100000" step="1" type="number" value="10000">
                                 </div>
                                 <div class="form-group">
                                       <label class="">Contribution Amount</label>
-                                      <input onchange="calculateDCA()" id="contributionAmount" placeholder="" min="1" max="10000" step="1" type="number" value="100">
+                                      <input id="contributionAmount" placeholder="" min="1" max="10000" step="1" type="number" value="100">
                                 </div>
                                 <div class="form-group">
                                     <label class="">Repeat Purchase</label>
-                                    <select onchange="calculateDCA()" name="frequency">
+                                    <select onchange="updateData()" name="frequency">
                                         <option value="daily">Daily</option>
                                         <option value="weekly">Weekly</option>
-                                        <option value="every_two_weeks">Every two weeks</option>
+                                        <!-- <option value="every_two_weeks">Every two weeks</option> -->
                                         <option value="monthly">Monthly</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label class="">Starting</label>
-                                    <select onchange="calculateDCA()" name="startDateAgo" class="form-control-lg form-control">
+                                    <select onchange="updateData()" name="startDateAgo" class="form-control-lg form-control">
                                         <option value="6_months">6 Months Ago</option>
                                         <option value="1_year">1 Year Ago</option>
                                         <option value="2_years">2 Years Ago</option>
@@ -99,7 +109,7 @@
                                         <option value="9_years">9 Years Ago</option>
                                         <option value="custom">On Specific Date</option>
                                     </select>
-                                </div>
+                                </div> -->
                             </fieldset>
                         </form>
                     </div>
@@ -118,10 +128,9 @@
   <script src="d3/pca.min.js"></script>
 
   <!-- <script src="pca.js"></script> -->
-  <!-- <script src="index.js"></script> -->
   <script src="autocomplete.js"></script>
   <script src="riskreturn.js"></script>
-  <script src="dca.js"></script>
   <script src="history.js"></script>
+  <script src="dca.js"></script>
 </body>
 </html>

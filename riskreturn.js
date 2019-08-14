@@ -21,20 +21,14 @@ function plotMPT(){
     d3.json("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=".concat(asset_2, "&apikey=", key))])
   .then(function(data) {
 
-      // console.log(data)
-
       data1 = data[0]["Time Series (Daily)"]
       data2 = data[1]["Time Series (Daily)"]
 
       var dates = Object.keys(data1).reverse().map(dateString => parseTime(dateString))
-      // console.log(dates)
 
       // Prepare data
       var data_1 = extractData(data1)
       var data_2 = extractData(data2)
-
-      // console.log(data_1)
-      // console.log(data_2)
 
       // Daily return
       var daily_1 = dailyChange(data_1);
@@ -61,8 +55,6 @@ function plotMPT(){
           mpt_data.push({risk: annual_risk, return: annual_return, asset_1: math.round((1-i)*100), asset_2: math.round(i*100)})
        }
 
-       // console.log(mpt_data)
-
       const mpt = d3.select('.mpt')
         .append('svg')
           .attr('width', '100%')
@@ -74,9 +66,9 @@ function plotMPT(){
       y_margin = (d3.max(mpt_data, d => d.return) - d3.min(mpt_data, d => d.return)) * 0.1
 
       // Graph information
-      const margin = {top: 50, right: 50, bottom: 50, left: 50};
-      const width = document.getElementById('mpt').offsetWidth - margin.left - margin.right;
-      const height = 500 - margin.top - margin.bottom;
+      var margin = {top: 50, right: 50, bottom: 50, left: 50};
+      var width = document.getElementById('mpt').offsetWidth;
+      var height = document.getElementById('mpt').offsetHeight;
 
       // Build X scales and axis
       const x = d3.scaleLinear()
@@ -86,7 +78,7 @@ function plotMPT(){
         .attr("class", "x-axis")
         .attr("transform", `translate(0,${height - margin.bottom})`)
         .call(d3.axisBottom(x)
-          .ticks(width / 80));
+          .ticks(width / 50));
 
       // Build Y scales and axis
       const y = d3.scaleLinear()
@@ -126,7 +118,7 @@ function plotMPT(){
 
       var frontier = mpt_data.reduce(function(res, obj) {return (obj.risk < res.risk) ? obj : res;})
       calculateHistory(dates, data_1, data_2, frontier.asset_1, frontier.asset_2, asset_1, asset_2)
-      calculateDCA(dates, data_1, data_2, frontier.asset_1, frontier.asset_2, asset_1, asset_2)
+      calculateDCA(dates, data_1, data_2, frontier.asset_1/100, frontier.asset_2/100, asset_1, asset_2)
 
       // create tooltip
       const tooltip = d3.select(".mpt")
@@ -166,7 +158,7 @@ function plotMPT(){
             })
           .on("click", function(d) {
             calculateHistory(dates, data_1, data_2, d.asset_1, d.asset_2, asset_1, asset_2)
-            calculateDCA(dates, data_1, data_2, d.asset_1, d.asset_2, asset_1, asset_2)
+            calculateDCA(dates, data_1, data_2, d.asset_1/100, d.asset_2/100, asset_1, asset_2)
           });
 
       // Creates legends

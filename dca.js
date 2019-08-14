@@ -1,129 +1,209 @@
+var dca = d3.select('.dca')
+  .append('svg')
+    .attr('width', '100%')
+    .attr('height', '100%')
+    .style('position', 'relative');
+
+// Graph information
+var marginDCA = {top: 20, right: 20, bottom: 40, left: 60};
+var widthDCA = document.getElementById('dca').offsetWidth;
+var heightDCA = document.getElementById('dca').offsetHeight;
+
+// Build X scales and axis
+var x_axis_DCA = dca.append("g")
+  .attr("class", "x-axis");
+
+// Build Y scales and axis
+var y_axis_DCA = dca.append("g")
+  .attr("class", "y-axis");
+
+// Add the lines
+// Asset  1
+var asset1LineDCA = dca.append("path")
+              .attr("class", "asset1")
+              .attr("fill", "none")
+              .attr("stroke", "green")
+              .attr("stroke-width", 1.0);
+// Asset  2
+var asset2LineDCA = dca.append("path")
+              .attr("class", "asset2")
+              .attr("fill", "none")
+              .attr("stroke", "red")
+              .attr("stroke-width", 1.0);
+// Portfolio
+var ptfLineDCA = dca.append("path")
+            .attr("class", "portfolio")
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 3);
+// Portfolio
+var moneyLineDCA = dca.append("path")
+            .attr("class", "money")
+            .attr("fill", "none")
+            .attr("stroke", "grey")
+            .attr("stroke-width", 3);
+
+// Creates legends
+dca.append("text")
+  .attr("y", 15)
+  .attr("x", 0)
+  // .attr("transform", "rotate(-90)")
+  .style("font-family", "sans-serif")
+  .style("font-size", "14px")
+  .text("Value");
+
+// dca.append("text")
+//     .attr("text-anchor", "end")
+//     .attr("transform", "rotate(-90)")
+//     .attr("y", -marginDCA.left+20)
+//     .attr("x", -marginDCA.top)
+//     .text("Y axis title")
+// https://www.d3-graph-gallery.com/graph/custom_axis.html
+
+dca.append("text")
+  .attr("y", heightDCA)
+  .attr("x", widthDCA/2)
+  .style("font-family", "sans-serif")
+  .style("font-size", "14px")
+  .text("Date");
 
 function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
 
-  start = document.getElementById("startingAmount").value
-  montly = document.getElementById("contributionAmount").value
-
-  portfolio  = []
-
-  quant1 = start/hist1[0]
-  quant2 = start/hist2[0]
-
-  data = []
-
-  for(let i = 0; i < hist1.length; i++){
-    data.push({date: dates[i],
-              asset1: hist1[i] * quant1,
-              asset2: hist2[i] * quant2,
-              portfolio: quant1*hist1[i]*p1/100 + quant2*hist2[i]*p2/100
-    })
-  }
-
   // Delete previous graph
-  d3.selectAll(".dca > *").remove();
+  // d3.selectAll(".dca > *").remove();
+  // console.log(dca)
+  d3.select("#startingAmount").on("change", function(d) {
+      update()})
+  d3.select("#contributionAmount").on("change", function(d) {
+      update()})
 
-  const dca = d3.select('.dca')
-    .append('svg')
-      .attr('width', '100%')
-      .attr('height', '100%')
-      .style('position', 'relative');
+  // create tooltip
+  var tooltip_dca = d3.select(".dca")
+    .append("div")
+      .attr("class", "tooltip")
+      .style("opacity", "0")
+      .style("display", "none")
+      .style("position", "absolute")
+      .style('z-index', '1000001');
 
-  // Graph margins
-  y_max = d3.max(data, function(d) { return d3.max([d.asset1, d.asset2, d.portfolio])})
-  y_min = d3.min(data, function(d) { return d3.min([d.asset1, d.asset2, d.portfolio])})
-  y_margin = (y_max - y_min) * 0.1
+  update();
 
-  // Graph information
-  const margin = {top: 50, right: 50, bottom: 50, left: 50};
-  const width = document.getElementById('dca').offsetWidth - margin.left - margin.right;
-  const height = document.getElementById('dca').offsetHeight - margin.top - margin.bottom;
+  function update() {
 
-  // Build X scales and axis
-  const x = d3.scaleTime()
-    .domain(d3.extent(data, d => d.date))
-    .range([margin.left, width - margin.right]);
-  dca.append("g")
-    .attr("class", "x-axis")
-    .attr("transform", `translate(0,${height - margin.bottom})`)
-    .call(d3.axisBottom(x)
-      .ticks(width / 80));
+    // Get the data again
+    let start = parseInt(document.getElementById("startingAmount").value)
+    let montly = parseInt(document.getElementById("contributionAmount").value)
 
-  // Build Y scales and axis
-  const y = d3.scaleLinear()
-    .domain([y_min - y_margin, y_max + y_margin])
-    .range([height - margin.bottom, margin.top]);
-  dca.append("g")
-    .attr("class", "y-axis")
-    .attr("transform", `translate(${margin.left},0)`)
-    .call(d3.axisLeft(y));
+    var money = start
 
-  // Generate lines
-  // Portfolio
-  const portfolio_ = d3.line()
-    .x(d => x(d.date))
-    .y(d => y(d.portfolio))
-    .curve(d3.curveCatmullRom.alpha(0.5));
-  // Asset 1
-  const asset1 = d3.line()
-    .x(d => x(d.date))
-    .y(d => y(d.asset1))
-    .curve(d3.curveCatmullRom.alpha(0.5));
-  // Asset 2
-  const asset2 = d3.line()
-    .x(d => x(d.date))
-    .y(d => y(d.asset2))
-    .curve(d3.curveCatmullRom.alpha(0.5));
+    // Variables
+    let q1 = start/hist1[0]
+    let q2 = start/hist2[0]
+    let q1p = start/hist1[0] * p1
+    let q2p = start/hist2[0] * p2
 
-  // Add the lines
-  // Asset  1
-  dca.append("path")
-    .data([data])
-    .transition()
-      .duration(750)
-    .attr("fill", "none")
-    .attr("stroke", "green")
-    .attr("stroke-width", 1.0)
-    .attr("stroke-linejoin", "round")
-    .attr("stroke-linecap", "round")
-    .attr("d", asset1)
-  // Asset  2
-  dca.append("path")
-    .data([data])
-    .transition()
-      .duration(750)
-    .attr("fill", "none")
-    .attr("stroke", "red")
-    .attr("stroke-width", 1.0)
-    .attr("stroke-linejoin", "round")
-    .attr("stroke-linecap", "round")
-    .attr("d", asset2);
-  // Portfolio
-  dca.append("path")
-    .data([data])
-    .transition()
-      .duration(750)
-    .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("stroke-width", 3)
-    .attr("stroke-linejoin", "round")
-    .attr("stroke-linecap", "round")
-    .attr("d", portfolio_);
+    let data = []
 
-    // create tooltip
-    const tooltip_dca = d3.select(".dca")
-      .append("div")
-        .attr("class", "tooltip")
-        .style("opacity", "0")
-        .style("display", "none")
-        .style("position", "absolute")
-        .style('z-index', '1000001');
+    for(let i = 0; i < hist1.length; i++){
+
+      tot1 = q1p * hist1[i]
+      tot2 = q2p * hist2[i]
+      sum = tot1 + tot2
+
+      curr1 = tot1 / sum
+
+      if (curr1 < p1) {
+        q1p += montly / hist1[i]
+      }
+      else {
+        q2p += montly / hist2[i]
+      }
+
+      q1 += montly / hist1[i]
+      q2 += montly / hist2[i]
+
+      money = money + montly
+
+      data.push({date: dates[i],
+                asset1: hist1[i] * q1,
+                asset2: hist2[i] * q2,
+                portfolio: q1p*hist1[i] + q2p*hist2[i],
+                money: money
+      })
+    }
+
+    // Graph margins
+    var y_max = d3.max(data, function(d) { return d3.max([d.asset1, d.asset2, d.portfolio, d.money])})
+    var y_min = d3.min(data, function(d) { return d3.min([d.asset1, d.asset2, d.portfolio, d.money])})
+    var y_margin = (y_max - y_min) * 0.1
+
+    // Build X scales and axis
+    var x = d3.scaleTime()
+      .domain(d3.extent(data, d => d.date))
+      .range([marginDCA.left, widthDCA - marginDCA.right]);
+    x_axis_DCA.attr("transform", `translate(0,${heightDCA - marginDCA.bottom})`)
+      .call(d3.axisBottom(x)
+        .ticks(widthDCA / 50));
+
+    // Build Y scales and axis
+    var y = d3.scaleLog()
+      .domain([y_min - y_margin, y_max + y_margin])
+      .range([heightDCA - marginDCA.bottom, marginDCA.top])
+      .base(10);
+    y_axis_DCA.attr("transform", `translate(${marginDCA.left},0)`)
+      .call(d3.axisLeft(y));
+
+    // Generate lines
+    // Portfolio
+    var portfolio_ = d3.line()
+      .x(d => x(d.date))
+      .y(d => y(d.portfolio))
+      .curve(d3.curveCatmullRom.alpha(0.5));
+    // Asset 1
+    var asset1 = d3.line()
+      .x(d => x(d.date))
+      .y(d => y(d.asset1))
+      .curve(d3.curveCatmullRom.alpha(0.5));
+    // Asset 2
+    var asset2 = d3.line()
+      .x(d => x(d.date))
+      .y(d => y(d.asset2))
+      .curve(d3.curveCatmullRom.alpha(0.5));
+    // Asset 2
+    var moneyL = d3.line()
+      .x(d => x(d.date))
+      .y(d => y(d.money))
+      .curve(d3.curveCatmullRom.alpha(0.5));
+
+    // Add the lines
+    // Asset  1
+    asset1LineDCA.data([data])
+          .transition()
+              .duration(1000)
+          .attr("d", asset1)
+    // Asset  2
+    asset2LineDCA.data([data])
+          .transition()
+              .duration(1000)
+          .attr("d", asset2);
+    // Portfolio
+    moneyLineDCA.data([data])
+        .transition()
+            .duration(1000)
+        .attr("d", moneyL);
+    // Portfolio
+    ptfLineDCA.data([data])
+        .transition()
+            .duration(1000)
+        .attr("d", portfolio_);
+
 
     // tooltip events
     dca.on("touchmove mousemove", function() {
       let coords = d3.mouse(this);
       let xCoord = coords[0], yCoord = coords[1];
       let date = x.invert(xCoord);
-      value_ = getValue_(data,date);
+      let value_ = getValue_(data,date);
       // console.log(value_)
 
       tooltip_dca.html(`<div class="tooltiptext">
@@ -144,22 +224,8 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
        .style("display", "none")
       })
 
-  // Creates legends
-  const yLegend = dca.append("text")
-    .attr("y", 15)
-    .attr("x", 0)
-    .style("font-family", "sans-serif")
-    .style("font-size", "14px")
-    .text("Value");
-
-  const xLegend = dca.append("text")
-    .attr("y", height)
-    .attr("x", width/2)
-    .style("font-family", "sans-serif")
-    .style("font-size", "14px")
-    .text("Date");
-
   }
+}
 
   // return value of the date selected
   var getValue_ = (data,date) => {
@@ -173,46 +239,3 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
       }
     }
   };
-
-  // ** Update data section (Called from the onclick)
-  function updateData() {
-
-      // Get the data again
-      start = document.getElementById("startingAmount").value
-      montly = document.getElementById("contributionAmount").value
-
-      portfolio  = []
-
-      quant1 = start/hist1[0]
-      quant2 = start/hist2[0]
-
-      data = []
-
-      for(let i = 0; i < hist1.length; i++){
-        data.push({date: dates[i],
-                  asset1: hist1[i] * quant1,
-                  asset2: hist2[i] * quant2,
-                  portfolio: quant1*hist1[i]*p1/100 + quant2*hist2[i]*p2/100
-        })
-      }
-
-      	// Scale the range of the data again
-      	x.domain(d3.extent(data, function(d) { return d.date; }));
-  	    y.domain([0, d3.max(data, function(d) { return d.close; })]);
-
-      // Select the section we want to apply our changes to
-      var svg = d3.select("body").transition();
-
-      // Make the changes
-          svg.select(".line")   // change the line
-              .duration(750)
-              .attr("d", valueline(data));
-          svg.select(".x.axis") // change the x axis
-              .duration(750)
-              .call(xAxis);
-          svg.select(".y.axis") // change the y axis
-              .duration(750)
-              .call(yAxis);
-
-      });
-  }
