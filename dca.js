@@ -1,4 +1,4 @@
-var dca = d3.select('.dca')
+var dca = d3.select('#dca')
   .append('svg')
     .attr('width', '100%')
     .attr('height', '100%')
@@ -76,9 +76,13 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
       update()})
   d3.select("#contributionAmount").on("change", function(d) {
       update()})
+  d3.select("#frequency").on("change", function(d) {
+      update()})
+  d3.select("#rebalance").on("change", function(d) {
+      update()})
 
   // create tooltip
-  var tooltip_dca = d3.select(".dca")
+  var tooltip_dca = d3.select("#dca")
     .append("div")
       .attr("class", "tooltip")
       .style("opacity", "0")
@@ -92,8 +96,11 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
 
     // Get the data again
     let start = parseInt(document.getElementById("startingAmount").value)
-    let montly = parseInt(document.getElementById("contributionAmount").value)
+    let contribution = parseInt(document.getElementById("contributionAmount").value)
+    let frequency = document.getElementById("frequency").value
+    let rebalance = document.getElementById("rebalance").checked
 
+    // Total invested
     var money = start
 
     // Variables
@@ -103,6 +110,7 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
     let q2p = start/hist2[0] * p2
 
     let data = []
+    let previousValue = 100
 
     for(let i = 0; i < hist1.length; i++){
 
@@ -110,27 +118,74 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
       tot2 = q2p * hist2[i]
       sum = tot1 + tot2
 
+      // Current percentage of asset1
       curr1 = tot1 / sum
 
-      if (curr1 < p1) {
-        q1p += montly / hist1[i]
-      }
-      else {
-        q2p += montly / hist2[i]
+      if (Math.abs(curr1 - p1) > 0.05 && rebalance) {
+        q1p = sum/hist1[i] * p1
+        q2p = sum/hist2[i] * p2
       }
 
-      q1 += montly / hist1[i]
-      q2 += montly / hist2[i]
+      var contribute = false
+      switch(frequency) {
+        case "daily":
+          contribute = true
+          break;
+        case "weekly":
+          if (dates[i].getDay() <= previousValue){
+            contribute = true
+          }
+          previousValue = dates[i].getDay()
+          break;
+        case "monthly":
+        if (dates[i].getMonth() != previousValue){
+          previousValue = dates[i].getMonth()
+          contribute = true
+        }
+          break;
+      }
 
-      money = money + montly
+      if (contribute) {
+          if (curr1 < p1) {
+            q1p += contribution / hist1[i]
+          }
+          else {
+            q2p += contribution / hist2[i]
+          }
+
+          q1 += contribution / hist1[i]
+          q2 += contribution / hist2[i]
+
+          money = money + contribution
+        }
 
       data.push({date: dates[i],
                 asset1: hist1[i] * q1,
                 asset2: hist2[i] * q2,
                 portfolio: q1p*hist1[i] + q2p*hist2[i],
                 money: money
-      })
-    }
+              })
+
+      }
+
+      // console.log(data)
+
+    document.getElementById("total_invested").innerHTML = "$ " + (data.slice(-1)[0]["money"]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    document.getElementById("total_value").innerHTML = "$ " + (data.slice(-1)[0]["portfolio"]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    var percentage = ((data.slice(-1)[0]["portfolio"] - data.slice(-1)[0]["money"])/data.slice(-1)[0]["money"]*100).toFixed(2)
+    document.getElementById("percent_change").innerHTML = percentage + " %";
+
+    // var up = document.getElementById("up");
+    // var down = document.getElementById("down");
+    //
+    // if (percentage >= 0){
+    //   up.style.display = "block";
+    //   down.style.display = "none";
+    // }
+    // else {
+    //   down.style.display = "block";
+    //   up.style.display = "none";
+    // }
 
     // Graph margins
     var y_max = d3.max(data, function(d) { return d3.max([d.asset1, d.asset2, d.portfolio, d.money])})
@@ -146,10 +201,10 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
         .ticks(widthDCA / 50));
 
     // Build Y scales and axis
-    var y = d3.scaleLog()
+    var y = d3.scaleLinear()
       .domain([y_min - y_margin, y_max + y_margin])
-      .range([heightDCA - marginDCA.bottom, marginDCA.top])
-      .base(10);
+      .range([heightDCA - marginDCA.bottom, marginDCA.top]);
+      // .base(10);
     y_axis_DCA.attr("transform", `translate(${marginDCA.left},0)`)
       .call(d3.axisLeft(y));
 
@@ -158,22 +213,22 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
     var portfolio_ = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.portfolio))
-      .curve(d3.curveCatmullRom.alpha(0.5));
+      // .curve(d3.curveCatmullRom.alpha(0.5));
     // Asset 1
     var asset1 = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.asset1))
-      .curve(d3.curveCatmullRom.alpha(0.5));
+      // .curve(d3.curveCatmullRom.alpha(0.5));
     // Asset 2
     var asset2 = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.asset2))
-      .curve(d3.curveCatmullRom.alpha(0.5));
+      // .curve(d3.curveCatmullRom.alpha(0.5));
     // Asset 2
     var moneyL = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.money))
-      .curve(d3.curveCatmullRom.alpha(0.5));
+      // .curve(d3.curveCatmullRom.alpha(0.5));
 
     // Add the lines
     // Asset  1
@@ -209,13 +264,14 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
       tooltip_dca.html(`<div class="tooltiptext">
                         <div class="money"><b>${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}</b></div>
                         <br>
-                        <div><font color="steelblue">Portfolio: $ ${parseFloat(value_[2]).toFixed(2)}</font></div>
-                        <div><font color="green">${asset1_name}: $ ${parseFloat(value_[0]).toFixed(2)}</font></div>
-                        <div><font color="red">${asset2_name}: $ ${parseFloat(value_[1]).toFixed(2)}</font></div>
+                        <div><font color="steelblue">Portfolio: $ ${parseFloat(value_[2]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</font></div>
+                        <div><font color="green">${asset1_name}: $ ${parseFloat(value_[0]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</font></div>
+                        <div><font color="red">${asset2_name}: $ ${parseFloat(value_[1]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</font></div>
+                        <div><font color="gray">Investeed: $ ${parseFloat(value_[3]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</font></div>
                         </div>`)
         .style('display', 'block')
         .style('opacity', '1')
-        .style('left', xCoord - 60 + "px")
+        .style('left', xCoord - 75 + "px")
         .style('top', y(value_[2]) + 10 + "px")
     });
     dca.on("mouseleave", function() {
@@ -233,7 +289,7 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
     for (let i = 0; i < data.length; i++) {
       let same = sameDate(data[i].date, date);
       if (same) {
-        return [Math.round(data[i].asset1 * 100)/100, Math.round(data[i].asset2 * 100)/100, Math.round(data[i].portfolio * 100)/100];
+        return [data[i].asset1, data[i].asset2, data[i].portfolio, data[i].money];
       } else {
         continue;
       }

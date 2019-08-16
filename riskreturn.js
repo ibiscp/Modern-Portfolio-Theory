@@ -11,24 +11,33 @@ plotMPT()
 
 function plotMPT(){
 
-  d3.selectAll(".mpt > *").remove();
+  d3.selectAll("#mpt > *").remove();
 
-  asset_1 = "AAPL"//document.getElementById("asset1").value.split(" ")[0]
-  asset_2 = "MSFT"//document.getElementById("asset2").value.split(" ")[0]
+  // asset_1 = "GOLD"//document.getElementById("asset1").value.split(" ")[0]
+  asset_1 = document.getElementById("asset1").value.split(" ")[0]
+  asset_2 = document.getElementById("asset2").value.split(" ")[0]
+
+  if (asset_1 == "" || asset_2 == ""){
+    asset_1 = "GOLD"
+    asset_2 = "SPY"
+  }
 
   Promise.all([
-    d3.json("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=".concat(asset_1, "&apikey=", key)),
-    d3.json("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=".concat(asset_2, "&apikey=", key))])
+    d3.json("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&outputsize=full&symbol=".concat(asset_1, "&apikey=", key)),
+    d3.json("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&outputsize=full&symbol=".concat(asset_2, "&apikey=", key))])
   .then(function(data) {
 
       data1 = data[0]["Time Series (Daily)"]
       data2 = data[1]["Time Series (Daily)"]
 
+      // console.log(data)
+
       var dates = Object.keys(data1).reverse().map(dateString => parseTime(dateString))
 
       // Prepare data
-      var data_1 = extractData(data1)
-      var data_2 = extractData(data2)
+      var samples = Math.min(Object.keys(data1).length, Object.keys(data2).length, 5000)
+      var data_1 = extractData(data1, samples)
+      var data_2 = extractData(data2, samples)
 
       // Daily return
       var daily_1 = dailyChange(data_1);
@@ -55,7 +64,7 @@ function plotMPT(){
           mpt_data.push({risk: annual_risk, return: annual_return, asset_1: math.round((1-i)*100), asset_2: math.round(i*100)})
        }
 
-      const mpt = d3.select('.mpt')
+      const mpt = d3.select('#mpt')
         .append('svg')
           .attr('width', '100%')
           .attr('height', '100%')
@@ -121,7 +130,7 @@ function plotMPT(){
       calculateDCA(dates, data_1, data_2, frontier.asset_1/100, frontier.asset_2/100, asset_1, asset_2)
 
       // create tooltip
-      const tooltip = d3.select(".mpt")
+      const tooltip = d3.select("#mpt")
         .append("div")
           .attr("class", "tooltip")
           .style("opacity", "0")
@@ -164,29 +173,32 @@ function plotMPT(){
       // Creates legends
       const yLegend = mpt.append("text")
         .attr("y", 15)
-        .attr("x", 0)
-        .style("font-family", "sans-serif")
-        .style("font-size", "14px")
+        .attr("x", 10)
+        // .style("font-family", "sans-serif")
+        // .style("font-size", "14px")
         .text("Return %");
 
       const xLegend = mpt.append("text")
         .attr("y", height)
         .attr("x", width/2)
-        .style("font-family", "sans-serif")
-        .style("font-size", "14px")
+        // .style("font-family", "sans-serif")
+        // .style("font-size", "14px")
         .text("Risk %");
 
     })
     .catch(err => console.log(err));
 }
 
-function extractData(object){
+function extractData(object, samples){
   data = []
 
-  for (var key in object) {
-      if (object.hasOwnProperty(key)) {
-        data.push(parseFloat(object[key]["4. close"]));
-      }
+  keys = Object.keys(object).slice(0, samples)
+
+  for (var i = 0; i < keys.length; i++){
+  // for (var key in keys) {
+      // if (object.hasOwnProperty(key)) {
+        data.push(parseFloat(object[keys[i]]["5. adjusted close"]));
+      // }
   }
   return data.reverse();
 }
@@ -208,7 +220,7 @@ var getValue = (data,date) => {
 function dailyChange(values){
   temp = []
   for (i=0; i < values.length - 1; i++){
-    temp.push((values[i]-values[i+1])/values[i+1])
+    temp.push((values[i+1]-values[i])/values[i])
   }
   return temp
 }

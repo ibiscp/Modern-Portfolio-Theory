@@ -1,4 +1,4 @@
-var evolution = d3.select('.history')
+var evolution = d3.select('#history')
   .append('svg')
     .attr('width', '100%')
     .attr('height', '100%')
@@ -55,7 +55,7 @@ evolution.append("text")
 function calculateHistory(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
 
   // create tooltip
-  var tooltip_history = d3.select(".history")
+  var tooltip_history = d3.select("#history")
     .append("div")
       .attr("class", "tooltip")
       .style("opacity", "0")
@@ -105,17 +105,17 @@ function calculateHistory(dates, hist1, hist2, p1, p2, asset1_name, asset2_name)
     var portfolio_ = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.portfolio))
-      .curve(d3.curveCatmullRom.alpha(0.5));
+      // .curve(d3.curveCatmullRom.alpha(0.5));
     // Asset 1
     var asset1 = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.asset1))
-      .curve(d3.curveCatmullRom.alpha(0.5));
+      // .curve(d3.curveCatmullRom.alpha(0.5));
     // Asset 2
     var asset2 = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.asset2))
-      .curve(d3.curveCatmullRom.alpha(0.5));
+      // .curve(d3.curveCatmullRom.alpha(0.5));
 
     // Add the lines
     // Asset  1
@@ -153,7 +153,7 @@ function calculateHistory(dates, hist1, hist2, p1, p2, asset1_name, asset2_name)
                         </div>`)
         .style('display', 'block')
         .style('opacity', '1')
-        .style('left', xCoord - 60 + "px")
+        .style('left', xCoord - 75 + "px")
         .style('top', y(value_[2]) + 10 + "px")
         // .style('left', xCoord - 60 + "px")
         // .style('top', y(value_[2]) + 10 + "px")

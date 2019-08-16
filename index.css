@@ -1,150 +1,148 @@
-body {
-  font-family: sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  width: 80%;
-  margin: auto;
+body{
+    font-family:sans-serif;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    width:80%;
+    margin:auto
 }
-header {
-  text-align: center;
-  margin-top: 50px;
-  margin-bottom: 50px;
+header{
+    text-align:center;
+    margin-top:50px;
+    margin-bottom:50px
 }
-.mpt {
-  display: flex;
-  justify-content: center;
-  position: relative;
-  width: 100%;
-  height: 300px;
-  margin-top: 20px;
+.graph{
+    display:flex;
+    justify-content:center;
+    position:relative;
+    width:100%;
+    height:300px;
+    margin-top:20px
 }
-.dca {
-  display: flex;
-  justify-content: center;
-  position: relative;
-  width: 100%;
-  height: 300px;
-  margin-top: 20px;
+svg{
+    position:relative
 }
-.history {
-  display: flex;
-  justify-content: center;
-  position: relative;
-  width: 100%;
-  height: 300px;
-  margin-top: 20px;
-}
-
-svg {
-  position: relative;
-}
-.tooltip {
-  border-radius: 5px;
-  padding: 5px;
-  box-sizing: border-box;
-  width: 120px;
-  text-align: left;
-  font-size: 11px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
+.tooltip{
+    border-radius:5px;
+    padding:5px;
+    box-sizing:border-box;
+    width:150px;
+    text-align:left;
+    font-size:11px;
+    background-color:rgba(0,0,0,.8);
+    color:#fff
 }
 .money {
   color: rgb(77, 221, 94);
   text-align: center;
 }
-.tooltip .tooltiptext::after {
-  content: "";
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent black transparent;
+h1{
+    display:flex;
+    justify-content:center;
+    align-items:center
 }
-h1 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.col{
+    flex:100%;
+    padding:0
 }
-
-.row {
-  display: flex;
+.block{
+    display:block;
+    width:100%;
+    border:none;
+    background-color:#d4d4d4;
+    padding:15px;
+    font-size:16px;
+    cursor:pointer;
+    text-align:center
 }
-
-.col {
-  flex: 100%;
-  padding: 0px;
-}
-
-.block {
-  display: block;
-  width: 100%;
-  border: none;
-  background-color: #d4d4d4;
-  padding: 15px;
-  /* margin-left: 5px; */
-  /* margin-right: 5px; */
-  font-size: 16px;
-  cursor: pointer;
-  text-align: center;
+fieldset{
+    text-align:center;
+    border:0
 }
 
-
-
-
-
-
-
-
-
-* { box-sizing: border-box; }
-body {
-  font: 16px Arial;
+.autocomplete{
+    position:relative;
+    display:inline-block;
+    width:100%
 }
-.autocomplete {
-  /*the container must be positioned relative:*/
-  position: relative;
-  display: inline-block;
-  width: 100%;
+input{
+    border:1px solid transparent;
+    background-color:#f1f1f1;
+    padding:10px;
+    font-size:16px;
+    background-color:#f1f1f1;
+    width:100%
 }
-.autocomplete input {
-  border: 1px solid transparent;
-  background-color: #f1f1f1;
-  padding: 10px;
-  font-size: 16px;
+select{
+    border:1px solid transparent;
+    background-color:#f1f1f1;
+    padding:10px;
+    font-size:16px;
+    background-color:#f1f1f1;
+    width:100%
 }
-input[type=text] {
-  background-color: #f1f1f1;
-  width: 100%;
+
+/* Checkbox */
+.container{
+    text-align:left;
+    display:block;
+    position:relative;
+    width:100%;
+    height:25px
 }
-input[type=submit] {
-  background-color: DodgerBlue;
-  color: #fff;
+.container input{
+    position:relative;
+    opacity:0;
+    cursor:pointer;
+    height:0;
+    width:0
 }
-.autocomplete-items {
-  position: absolute;
-  border: 1px solid #d4d4d4;
-  border-bottom: none;
-  border-top: none;
-  z-index: 99;
-  /*position the autocomplete items to be the same width as the container:*/
-  top: 100%;
-  left: 0;
-  right: 0;
+.checkmark{
+    position:absolute;
+    left:50%;
+    margin-left:-12px;
+    height:25px;
+    width:25px;
+    background-color:#eee
 }
-.autocomplete-items div {
-  padding: 10px;
-  cursor: pointer;
-  background-color: #fff;
-  border-bottom: 1px solid #d4d4d4;
+.container:hover input~.checkmark{
+    background-color:#ccc
 }
-.autocomplete-items div:hover {
-  /*when hovering an item:*/
-  background-color: #e9e9e9;
+.container input:checked~.checkmark{
+    background-color:#d4d4d4
 }
-.autocomplete-active {
-  /*when navigating through the items using the arrow keys:*/
-  background-color: DodgerBlue !important;
-  color: #ffffff;
+.checkmark:after{
+    content:"";
+    position:absolute;
+    display:none
+}
+.container input:checked~.checkmark:after{
+    display:block
+}
+.container .checkmark:after{
+    left:9px;
+    top:5px;
+    width:5px;
+    height:10px;
+    border:solid #000;
+    border-width:0 3px 3px 0;
+    -webkit-transform:rotate(45deg);
+    -ms-transform:rotate(45deg);
+    transform:rotate(45deg)
+}
+
+.overview {
+    background-color:#eee;
+    text-align: center;
+}
+/* .overview  {
+  border: 1px solid black;
+} */
+/* .verticalLine {
+  border-left: 1px solid black;
+} */
+/* .overview td {
+  border-right: 5px solid white;
+} */
+td.active {
+    border-right: 5px solid white;
 }
