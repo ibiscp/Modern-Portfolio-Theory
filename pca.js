@@ -38,7 +38,7 @@ d3.json("data.txt")
 
   // Extract data
   var matrix = extractPca(data, stocks)
-  console.log(matrix)
+  // console.log(matrix)
 
   // Calculate correlation matrix
   var cols = "01234".split("");

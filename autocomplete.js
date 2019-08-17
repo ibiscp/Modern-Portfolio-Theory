@@ -69,10 +69,10 @@ function autocomplete(inp) {
             b = document.createElement("DIV");
             /*make the matching letters bold:*/
 
-            b.innerHTML = "";
+            b.innerHTML = company.substr(0, indexList[0])
             for (i = 0; i < indexList.length-1; i++) {
               b.innerHTML += "<strong>" + company.substr(indexList[i], val.length) + "</strong>";
-              b.innerHTML += company.substr(indexList[i] + val.length, indexList[i+1] - 1)
+              b.innerHTML += company.substr(indexList[i] + val.length, indexList[i+1] - indexList[i] - 1)
             }
 
             /*insert a input field that will hold the current array item's value:*/
