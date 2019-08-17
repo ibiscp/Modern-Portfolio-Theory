@@ -5,9 +5,8 @@ var evolution = d3.select('#history')
     .style('position', 'relative');
 
 // Graph information
-var margin = {top: 50, right: 50, bottom: 50, left: 50};
-var width = document.getElementById('history').offsetWidth;
-var height = document.getElementById('history').offsetHeight;
+var width_evolution = document.getElementById('history').offsetWidth;
+var height_evolution = document.getElementById('history').offsetHeight;
 
 // Build X scales and axis
 var x_axis = evolution.append("g")
@@ -39,17 +38,17 @@ var ptfLine = evolution.append("path")
 
 // Creates legends
 evolution.append("text")
-  .attr("y", 15)
-  .attr("x", 0)
-  .style("font-family", "sans-serif")
-  .style("font-size", "14px")
+  .attr("y", legendy)
+  .attr("x", legendx)
+  // .style("font-family", "sans-serif")
+  // .style("font-size", "14px")
   .text("Value");
 
 evolution.append("text")
-  .attr("y", height)
-  .attr("x", width/2)
-  .style("font-family", "sans-serif")
-  .style("font-size", "14px")
+  .attr("y", height_evolution)
+  .attr("x", width_evolution/2)
+  // .style("font-family", "sans-serif")
+  // .style("font-size", "14px")
   .text("Date");
 
 function calculateHistory(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
@@ -88,15 +87,15 @@ function calculateHistory(dates, hist1, hist2, p1, p2, asset1_name, asset2_name)
     // Build X scales and axis
     var x = d3.scaleTime()
       .domain(d3.extent(data, d => d.date))
-      .range([margin.left, width - margin.right]);
-    x_axis.attr("transform", `translate(0,${height - margin.bottom})`)
+      .range([margin.left, width_evolution - margin.right]);
+    x_axis.attr("transform", `translate(0,${height_evolution - margin.bottom})`)
       .call(d3.axisBottom(x)
-        .ticks(width / 50));
+        .ticks(width_evolution / 50));
 
     // Build Y scales and axis
     var y = d3.scaleLinear()
       .domain([y_min - y_margin, y_max + y_margin])
-      .range([height - margin.bottom, margin.top]);
+      .range([height_evolution - margin.bottom, margin.top]);
     y_axis.attr("transform", `translate(${margin.left},0)`)
       .call(d3.axisLeft(y));
 

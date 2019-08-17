@@ -5,7 +5,6 @@ var dca = d3.select('#dca')
     .style('position', 'relative');
 
 // Graph information
-var marginDCA = {top: 20, right: 20, bottom: 40, left: 60};
 var widthDCA = document.getElementById('dca').offsetWidth;
 var heightDCA = document.getElementById('dca').offsetHeight;
 
@@ -45,33 +44,25 @@ var moneyLineDCA = dca.append("path")
 
 // Creates legends
 dca.append("text")
-  .attr("y", 15)
-  .attr("x", 0)
-  // .attr("transform", "rotate(-90)")
-  .style("font-family", "sans-serif")
-  .style("font-size", "14px")
+  .attr("y", legendy)
+  .attr("x", legendx)
   .text("Value");
 
 // dca.append("text")
 //     .attr("text-anchor", "end")
 //     .attr("transform", "rotate(-90)")
-//     .attr("y", -marginDCA.left+20)
-//     .attr("x", -marginDCA.top)
+//     .attr("y", -margin.left+20)
+//     .attr("x", -margin.top)
 //     .text("Y axis title")
 // https://www.d3-graph-gallery.com/graph/custom_axis.html
 
 dca.append("text")
   .attr("y", heightDCA)
   .attr("x", widthDCA/2)
-  .style("font-family", "sans-serif")
-  .style("font-size", "14px")
   .text("Date");
 
 function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
 
-  // Delete previous graph
-  // d3.selectAll(".dca > *").remove();
-  // console.log(dca)
   d3.select("#startingAmount").on("change", function(d) {
       update()})
   d3.select("#contributionAmount").on("change", function(d) {
@@ -195,17 +186,17 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
     // Build X scales and axis
     var x = d3.scaleTime()
       .domain(d3.extent(data, d => d.date))
-      .range([marginDCA.left, widthDCA - marginDCA.right]);
-    x_axis_DCA.attr("transform", `translate(0,${heightDCA - marginDCA.bottom})`)
+      .range([margin.left, widthDCA - margin.right]);
+    x_axis_DCA.attr("transform", `translate(0,${heightDCA - margin.bottom})`)
       .call(d3.axisBottom(x)
         .ticks(widthDCA / 50));
 
     // Build Y scales and axis
     var y = d3.scaleLinear()
       .domain([y_min - y_margin, y_max + y_margin])
-      .range([heightDCA - marginDCA.bottom, marginDCA.top]);
+      .range([heightDCA - margin.bottom, margin.top]);
       // .base(10);
-    y_axis_DCA.attr("transform", `translate(${marginDCA.left},0)`)
+    y_axis_DCA.attr("transform", `translate(${margin.left},0)`)
       .call(d3.axisLeft(y));
 
     // Generate lines
@@ -213,22 +204,18 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
     var portfolio_ = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.portfolio))
-      // .curve(d3.curveCatmullRom.alpha(0.5));
     // Asset 1
     var asset1 = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.asset1))
-      // .curve(d3.curveCatmullRom.alpha(0.5));
     // Asset 2
     var asset2 = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.asset2))
-      // .curve(d3.curveCatmullRom.alpha(0.5));
     // Asset 2
     var moneyL = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.money))
-      // .curve(d3.curveCatmullRom.alpha(0.5));
 
     // Add the lines
     // Asset  1

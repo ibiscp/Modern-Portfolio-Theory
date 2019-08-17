@@ -16,6 +16,15 @@
         <!-- <h5>*hover for interactive tooltip*</h5> -->
     </header>
 
+    <div style="border: 1px solid #d4d4d4; padding: 0px 10px 10px 10px; border-radius: 5px; color: black;">
+        <center>
+            <h2>PCA graph</h2></center>
+        <!-- <div>Risk return graph</> -->
+        <div id="pca" class="graph"></div>
+    </div>
+    </br>
+
+
     <table style="width:100%" cellspacing="0" cellpadding="0" cellspacing="10">
         <tr>
             <td>
@@ -59,7 +68,7 @@
                 <table width="100%" class="overview">
                     <tr>
 
-<!-- <tbody> -->
+
                         <td>
                             <svg color="#5fc27e" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-lg text-success">
                                 <line x1="12" y1="1" x2="12" y2="23"></line>
@@ -70,8 +79,7 @@
                             <h1><label id="total_invested"></h1>
                             <div>Total Invested</div>
                         </td>
-<!-- </tbody>
-<tbody> -->
+
                         <td>
                             <svg color="#fcc100" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-lg text-warning">
                                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
@@ -81,8 +89,7 @@
                             <h1><label id="total_value"></h1>
                             <div>Total Value</div>
                         </td>
-<!-- </tbody>
-<tbody> -->
+
                         <td>
                             <svg color="#5fc27e" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-lg text-success">
                                 <line x1="12" y1="19" x2="12" y2="5"></line>
@@ -97,56 +104,9 @@
                             <h1><label id="percent_change"></h1>
                             <div>Percent Change</div>
                         </td>
-                        <!-- </tbody> -->
+
                     </tr>
                 </table>
-
-
-            <!-- <table width="100%" class="overview" cellpadding="5px">
-                <tr>
-                    <ta>
-                        <th>
-                            <svg color="#5fc27e" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-lg text-success">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                        </th>
-                        <th>
-                            <h1><label id="total_invested"></h1>
-                            <div>Total Invested</div>
-                        </th>
-                    </ta>
-
-                    <ta>
-                        <th>
-                            <svg color="#fcc100" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-lg text-warning">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                            </svg>
-                        </th>
-                        <th>
-                            <h1><label id="total_value"></h1>
-                            <div>Total Value</div>
-                        </th>
-                    </ta>
-
-                    <ta>
-                        <th>
-                            <svg id="up" color="#5fc27e" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-lg text-success">
-                                <line x1="12" y1="19" x2="12" y2="5"></line>
-                                <polyline points="5 12 12 5 19 12"></polyline>
-                            </svg>
-                            <svg id="down" style="display: none" color="#f44455" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-lg text-danger">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <polyline points="19 12 12 19 5 12"></polyline>
-                            </svg>
-                        </th>
-                        <th>
-                            <h1><label id="percent_change"></h1>
-                            <div>Percent Change</div>
-                        </th>
-                    </ta>
-                </tr>
-            </table> -->
 
             <table style="width: 100%; height: 300px; padding: 0px 10px 0px 10px;">
                 <colgroup>
@@ -162,23 +122,22 @@
                                         <div class="form-group">
                                             <label class="dcaLabel">Starting Amount</label>
                                             </br>
-                                            <input class="dcaInput" id="startingAmount" placeholder="" min="1" max="100000" step="1" type="number" value="10000">
+                                            <input class="dcaInput" id="startingAmount" placeholder="" min="1" max="100000000000" step="1" type="number" value="10000">
                                         </div>
                                         </br>
                                         <div class="form-group">
                                             <label class="dcaLabel">Contribution Amount</label>
                                             </br>
-                                            <input class="dcaInput" id="contributionAmount" placeholder="" min="1" max="10000" step="1" type="number" value="100">
+                                            <input class="dcaInput" id="contributionAmount" placeholder="" min="1" max="10000000" step="1" type="number" value="100">
                                         </div>
                                         </br>
                                         <div class="form-group">
                                             <label class="dcaLabel">Repeat Purchase</label>
                                             </br>
                                             <select class="dcaInput" id="frequency">
-                                                <option value="daily">Daily</option>
-                                                <option value="weekly">Weekly</option>
-                                                <!-- <option value="every_two_weeks">Every two weeks</option> -->
                                                 <option value="monthly">Monthly</option>
+                                                <option value="weekly">Weekly</option>
+                                                <option value="daily">Daily</option>
                                             </select>
                                         </div>
                                         </br>
@@ -208,10 +167,17 @@
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.0.2/math.min.js"></script>
+    <script src="https://unpkg.com/data2grid@1.0.0/build/data2grid.min.js"></script>
     <script src="d3/jquery.csv.min.js"></script>
     <script src="d3/pca.min.js"></script>
+    <!-- <script src="d3/pca.js"></script> -->
 
-    <!-- <script src="pca.js"></script> -->
+    <script src="https://unpkg.com/jeezy@1.12.11/lib/jeezy.min.js"></script>
+    <script src="https://unpkg.com/data2grid@1.0.0/build/data2grid.min.js"></script>
+
+
+    <script src="variables.js"></script>
+    <script src="pca.js"></script>
     <script src="autocomplete.js"></script>
     <script src="riskreturn.js"></script>
     <script src="history.js"></script>

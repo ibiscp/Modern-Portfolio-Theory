@@ -1,148 +1,200 @@
-var data = [[40,50,60],[50,70,60],[80,70,90],[50,60,80]];
-var vectors = PCA.getEigenVectors(data);
+var pca = d3.select('#pca')
+  .append('svg')
+    .attr('width', '100%')
+    .attr('height', '100%')
+    .style('position', 'relative')
+    // .call(d3.zoom().on("zoom", function () {
+    //        pca.attr("transform", d3.event.transform)
+    //     }))
+    //   .append("g")
 
-console.log(vectors)
+// Graph information
+var widthPCA = document.getElementById('pca').offsetWidth;
+var heightPCA = document.getElementById('pca').offsetHeight;
 
-//
-// d3.csv("all_stock_5yr.csv")
-//   .then(data => {
-//
-//     // Get data from csv
-//     data = data.map(row => {
-//       return {
-//         date: parseTime(row["Date"]),
-//         slg: +row[asset_1],
-//         usa: +row[asset_2]
-//       };
-//     });
-//
-//     // Prepare data
-//     var data_1 = data.slice(0, period).map(function(value){return value.slg;});
-//     var data_2 = data.slice(0, period).map(function(value){return value.usa;});
-//
-//     // Daily return
-//     var daily_1 = dailyChange(data_1);
-//     var daily_2 = dailyChange(data_2);
-//
-//     // Calculate return
-//     return_1 = annualReturn(daily_1)
-//     return_2 = annualReturn(daily_2)
-//
-//     // Calculate risk
-//     risk_1 = math.std(daily_1) * math.sqrt(workDays)
-//     risk_2 = math.std(daily_2) * math.sqrt(workDays)
-//
-//     // Calculate correlation
-//     correlation = correlation(data_1, data_2)
-//
-//     // Generate data to plot
-//     var mpt_data = []
-//     for (var i = 0; i <= 1; i = i + 0.1 ){
-//         annual_risk = math.sqrt(math.pow(1 - i, 2) * math.pow(risk_1, 2) +
-//                                 math.pow(i, 2) * math.pow(risk_2, 2) +
-//                                 2 * correlation * i * (1-i) * risk_1 * risk_2)*100;
-//         annual_return = ((1 - i) * return_1 + i * return_2)*100;
-//         mpt_data.push({risk: annual_risk, return: annual_return, asset_1: math.round((1-i)*100), asset_2: math.round(i*100)})
-//      }
-//
-//     const mpt = d3.select('.mpt')
-//       .append('svg')
-//         .attr('width', width)
-//         .attr('height', height)
-//         .style('position', 'relative');
-//
-//     // Graph margins
-//     x_margin = (d3.max(mpt_data, d => d.risk) - d3.min(mpt_data, d => d.risk)) * 0.1
-//     y_margin = (d3.max(mpt_data, d => d.return) - d3.min(mpt_data, d => d.return)) * 0.1
-//
-//     // Build X scales and axis
-//     const x = d3.scaleLinear()
-//       .domain([d3.min(mpt_data, d => d.risk) - x_margin, d3.max(mpt_data, d => d.risk) + x_margin])
-//       .range([margin.left, width - margin.right]);
-//     mpt.append("g")
-//       .attr("class", "x-axis")
-//       .attr("transform", `translate(0,${height - margin.bottom})`)
-//       .call(d3.axisBottom(x)
-//         .ticks(width / 80));
-//
-//     // Build Y scales and axis
-//     const y = d3.scaleLinear()
-//       .domain([d3.min(mpt_data, d => d.return) - y_margin, d3.max(mpt_data, d => d.return) + y_margin])
-//       .range([height - margin.bottom, margin.top]);
-//     mpt.append("g")
-//       .attr("class", "y-axis")
-//       .attr("transform", `translate(${margin.left},0)`)
-//       .call(d3.axisLeft(y));
-//
-//     // Generate line
-//     const mpt_line = d3.line()
-//       .x(d => x(d.risk))
-//       .y(d => y(d.return))
-//       .curve(d3.curveCatmullRom.alpha(0.5));
-//
-//     // Add the line
-//     mpt.append("path")
-//       .data([mpt_data])
-//       .attr("fill", "none")
-//       .attr("stroke", "steelblue")
-//       .attr("stroke-width", 1.5)
-//       .attr("stroke-linejoin", "round")
-//       .attr("stroke-linecap", "round")
-//       .attr("d", mpt_line);
-//
-//     // Add efficient frontier
-//     mpt.append("line")
-//       .attr("x1", x(d3.min(mpt_data, d => d.risk)))
-//       .attr("y1", 0 + margin.top)
-//       .attr("x2", x(d3.min(mpt_data, d => d.risk)))
-//       .attr("y2", height - margin.bottom)
-//       .style("stroke-width", 2)
-//       .style("stroke-dasharray", ("3, 3"))
-//       .style("stroke", "red")
-//       .style("fill", "none");
-//
-//     // Add the dots
-//     mpt.selectAll("dot")
-//         .data(mpt_data)
-//       .enter().append("circle")
-//         .attr("r", 4)
-//         .attr("cx", function(d) { return x(d.risk); })
-//         .attr("cy", function(d) { return y(d.return); })
-//         .on("mouseover", function (d) {
-//           let coords = d3.mouse(this);
-//           let xCoord = coords[0], yCoord = coords[1];
-//           d3.select(this).attr("r", 10)
-//           tooltip.html(`<div class="tooltiptext">
-//                         <div class="money"><b>${asset_1} - ${d.asset_1} %</b></div>
-//                         <div class="money"><b>${asset_2} - ${d.asset_2} %</b></div>
-//                         <br>
-//                         <div>Risk: ${parseFloat(d.risk).toFixed(2)} %</div>
-//                         <div>Return: ${parseFloat(d.return).toFixed(2)} %</div></div>`)
-//             .style('display', 'block')
-//             .style('opacity', '1')
-//             .style('left', xCoord + 50)
-//             .style('top', yCoord + 10);
-//           })
-//         .on("mouseleave", function() {
-//           d3.select(this).attr("r", 4)
-//           tooltip.style("opacity", "0")
-//            .style("display", "none")
-//           });
-//
-//     // Creates legends
-//     const yLegend = mpt.append("text")
-//       .attr("y", 15)
-//       .attr("x", 0)
-//       .style("font-family", "sans-serif")
-//       .style("font-size", "14px")
-//       .text("Return %");
-//
-//     const xLegend = mpt.append("text")
-//       .attr("y", height)
-//       .attr("x", 450)
-//       .style("font-family", "sans-serif")
-//       .style("font-size", "14px")
-//       .text("Risk %");
-//
-//   })
-//   .catch(err => console.log(err));
+// Build X scales and axis
+var x_axis_PCA = pca.append("g")
+  .attr("class", "x-axis");
+
+// Build Y scales and axis
+var y_axis_PCA = pca.append("g")
+  .attr("class", "y-axis");
+
+// Creates legends
+pca.append("text")
+  .attr("y", legendy)
+  .attr("x", legendx)
+  .text("PC1");
+
+pca.append("text")
+  .attr("y", heightPCA)
+  .attr("x", widthPCA/2)
+  .text("PC2");
+
+d3.json("data.txt")
+  .then(data => {
+
+  var stocks = Object.keys(data)
+
+  // Extract data
+  var matrix = extractPca(data, stocks)
+  console.log(matrix)
+
+  // Calculate correlation matrix
+  var cols = "01234".split("");
+  var corr = jz.arr.correlationMatrix(matrix, cols);
+  var corrMatrix = convert2matrix(corr);
+
+  // Calculate PCA
+  var vectors = PCA.getEigenVectors(corrMatrix);
+
+  // Get first two eigenvectors
+  var p1 = vectors["0"]["vector"]
+  var p2 = vectors["1"]["vector"]
+
+  // Multiply matrix by eigenvectors
+  var pca_data = []
+  for (var i = 0; i < stocks.length; i++){
+    pc1 = math.multiply(matrix[i], p1)
+    pc2 = math.multiply(matrix[i], p2)
+
+    pca_data.push({pc1: pc1, pc2: pc2, stock: stocks[i]})
+  }
+
+  var selected = []
+
+
+
+  // create tooltip
+  var tooltip_pca = d3.select("#pca")
+    .append("div")
+      .attr("class", "tooltip")
+      .style("opacity", "0")
+      .style("display", "none")
+      .style("position", "absolute")
+      .style('z-index', '1000001');
+
+  // Graph margins
+  var x_max = d3.max(pca_data, function(d) {return d.pc1})
+  var x_min = d3.min(pca_data, function(d) {return d.pc1})
+  var x_margin = (x_max - x_min) * 0.1
+  var y_max = d3.max(pca_data, function(d) {return d.pc2})
+  var y_min = d3.min(pca_data, function(d) {return d.pc2})
+  var y_margin = (y_max - y_min) * 0.1
+
+  // Build X scales and axis
+  var x = d3.scaleLinear()
+    .domain([x_min - x_margin, x_max + x_margin])
+    .range([widthPCA - margin.bottom, margin.top]);
+  x_axis_PCA.attr("transform", `translate(0,${heightPCA - margin.bottom})`)
+    .call(d3.axisBottom(x));
+
+  // Build Y scales and axis
+  var y = d3.scaleLinear()
+    .domain([y_min - y_margin, y_max + y_margin])
+    .range([heightPCA - margin.bottom, margin.top]);
+  y_axis_PCA.attr("transform", `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y));
+
+  // Add the dots
+  var dots  = pca.selectAll("circle")
+    .data(pca_data);
+
+  dots.transition()
+      .duration(750)
+    .attr("r", 2)
+    .attr("cx", function(d) { return x(d.pc1); })
+    .attr("cy", function(d) { return y(d.pc2); });
+
+  dots.enter().append("circle")
+    .attr("r", 0)
+    .attr("cx", function(d) { return x(d.pc1); })
+    .attr("cy", function(d) { return y(d.pc2); })
+
+    .on("mouseover", function (d) {
+      let coords = d3.mouse(this);
+      let xCoord = coords[0], yCoord = coords[1];
+      d3.select(this).transition()
+                .duration(300)
+                .attr("r", 5)
+      tooltip_pca.html(`<div class="tooltiptext">
+                    <div class="money"><b>${d.stock}</b></div>`)
+        .style('display', 'block')
+        .style('left', xCoord - 60)
+        .style('top', yCoord + 20)
+        .transition()
+                  .duration(300)
+                  .style('opacity', '1');
+      })
+    .on("mouseleave", function(d) {
+
+      if (selected.indexOf(d.stock) >= 0){
+        d3.select(this).transition()
+                  .duration(300)
+                  .attr("r", 5)
+      }
+      else {
+        d3.select(this).transition()
+                  .duration(300)
+                  .attr("r", 2)
+      }
+
+      tooltip_pca.transition()
+                .duration(300)
+                .style("opacity", "0")
+      })
+    .on("click", function(d) {
+
+      index = selected.indexOf(d.stock)
+      if (index >= 0){
+        selected.splice(index, 1);
+        d3.select(this).transition()
+                  .duration(300)
+                  .style('fill', 'black')
+      }
+      else if (selected.length < 2) {
+        selected.push(d.stock)
+        d3.select(this).transition()
+                  .duration(300)
+                  .style('fill', 'red')
+      }
+
+      document.getElementById("asset1").value = selected[0] == undefined ? "" : selected[0]
+      document.getElementById("asset2").value = selected[1] == undefined ? "" : selected[1]
+
+    })
+    .transition()
+      .duration(700)
+      .attr("r", 2);
+
+})
+
+function extractPca(object, keys){
+  var matrix = [];
+
+  for (var i = 0; i < keys.length; i++){
+      matrix[i] = [];
+
+      for(var j=0; j<Object.keys(object[keys[i]]).length; j++) {
+          matrix[i][j] = parseFloat(object[keys[i]][j]);
+      }
+  }
+
+  return matrix;
+}
+
+function convert2matrix(corr){
+  var matrix = new Array(5);
+
+  for (var i = 0; i < matrix.length; i++) {
+    matrix[i] = new Array(5);
+  }
+  // console.log(matrix)
+
+  for(var key in Object.keys(corr)){
+    var obj = corr[key]
+    matrix[parseInt(obj["column_x"])][parseInt(obj["column_y"])] = parseFloat(obj["correlation"])
+  }
+
+  return matrix;
+}
