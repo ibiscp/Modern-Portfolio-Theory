@@ -33,7 +33,7 @@ pca.append("text")
   .attr("x", widthPCA/2)
   .text("PC2");
 
-d3.json("data.txt")
+d3.json("dataset/data.txt")
   .then(data => {
 
   var stocks = Object.keys(data)

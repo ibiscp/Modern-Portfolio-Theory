@@ -28,7 +28,7 @@ import json
 
 # Get data from csv and save to dictionary
 dictionary = {}
-with open('all_stocks_5yr.csv') as csv_file:
+with open('dataset/all_stocks_5yr.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         next(csv_file)
         for row in csv_reader:
