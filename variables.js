@@ -7,7 +7,7 @@ var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
-var margin = {top: 50, right: 50, bottom: 50, left: 70};
+var margin = {top: 80, right: 50, bottom: 50, left: 70};
 
 legendy = 15
 legendx = 10

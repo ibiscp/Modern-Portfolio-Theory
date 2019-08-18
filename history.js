@@ -40,15 +40,11 @@ var ptfLine = evolution.append("path")
 evolution.append("text")
   .attr("y", legendy)
   .attr("x", legendx)
-  // .style("font-family", "sans-serif")
-  // .style("font-size", "14px")
   .text("Value");
 
 evolution.append("text")
   .attr("y", height_evolution)
   .attr("x", width_evolution/2)
-  // .style("font-family", "sans-serif")
-  // .style("font-size", "14px")
   .text("Date");
 
 function calculateHistory(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
@@ -89,6 +85,7 @@ function calculateHistory(dates, hist1, hist2, p1, p2, asset1_name, asset2_name)
       .domain(d3.extent(data, d => d.date))
       .range([margin.left, width_evolution - margin.right]);
     x_axis.attr("transform", `translate(0,${height_evolution - margin.bottom})`)
+    .transition().duration(1000)
       .call(d3.axisBottom(x)
         .ticks(width_evolution / 50));
 
@@ -97,6 +94,7 @@ function calculateHistory(dates, hist1, hist2, p1, p2, asset1_name, asset2_name)
       .domain([y_min - y_margin, y_max + y_margin])
       .range([height_evolution - margin.bottom, margin.top]);
     y_axis.attr("transform", `translate(${margin.left},0)`)
+    .transition().duration(1000)
       .call(d3.axisLeft(y));
 
     // Generate lines
@@ -116,6 +114,42 @@ function calculateHistory(dates, hist1, hist2, p1, p2, asset1_name, asset2_name)
       .y(d => y(d.asset2))
       // .curve(d3.curveCatmullRom.alpha(0.5));
 
+
+
+    // var areaGradient = evolution.append("defs")
+    //   .append("linearGradient")
+    //   .attr("id","areaGradient")
+    //   .attr("x1", "0%").attr("y1", "0%")
+    //   .attr("x2", "100%").attr("y2", "100%");
+    //
+    // areaGradient.append("stop")
+    //   .attr("offset", "0%")
+    //   .attr("stop-color", "#21825C")
+    //   .attr("stop-opacity", 0.6);
+    // areaGradient.append("stop")
+    //   .attr("offset", "80%")
+    //   .attr("stop-color", "white")
+    //   .attr("stop-opacity", 0);
+
+    // evolution.append("path")
+    //   .style("fill", "url(#areaGradient)")
+    //   .attr("d", portfolio_);
+
+    evolution.append("linearGradient")
+      .attr("id", "area-gradient")
+      .attr("gradientUnits", "userSpaceOnUse")
+      .attr("x1", 0).attr("y1", 0)
+      .attr("x2", 0).attr("y2", 1)
+    .selectAll("stop")
+      .data([
+        {offset: "0%", color: "steelblue"},
+        {offset: "100%", color: "transparent"}
+      ])
+    .enter().append("stop")
+      .attr("offset", function(d) { return d.offset; })
+      .attr("stop-color", function(d) { return d.color; });
+
+
     // Add the lines
     // Asset  1
     asset1Line.data([data])
@@ -131,7 +165,105 @@ function calculateHistory(dates, hist1, hist2, p1, p2, asset1_name, asset2_name)
     ptfLine.data([data])
         .transition()
             .duration(1000)
-        .attr("d", portfolio_);
+        .attr("d", portfolio_)
+        // .style("fill", "url(#area-gradient)");
+
+
+
+
+
+
+    // var mouseG = evolution.append("g")
+    //       .attr("class", "mouse-over-effects");
+    //
+    // mouseG.append("path") // this is the black vertical line to follow mouse
+    //   .attr("class", "mouse-line")
+    //   .style("stroke", "black")
+    //   .style("stroke-width", "1px")
+    //   .style("opacity", "0");
+    //
+    // var lines = document.getElementsByClassName('line');
+    //
+    // var mousePerLine = mouseG.selectAll('.mouse-per-line')
+    //   .data(data)
+    //   .enter()
+    //   .append("g")
+    //   .attr("class", "mouse-per-line");
+    //
+    // mousePerLine.append("circle")
+    //   .attr("r", 7)
+    //   .style("stroke", function(d) {
+    //     return color(d.name);
+    //   })
+    //   .style("fill", "none")
+    //   .style("stroke-width", "1px")
+    //   .style("opacity", "0");
+    //
+    // mousePerLine.append("text")
+    //   .attr("transform", "translate(10,3)");
+    //
+    // mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
+    //   .attr('width', width) // can't catch mouse events on a g element
+    //   .attr('height', height)
+    //   .attr('fill', 'none')
+    //   .attr('pointer-events', 'all')
+    //   .on('mouseout', function() { // on mouse out hide line, circles and text
+    //     d3.select(".mouse-line")
+    //       .style("opacity", "0");
+    //     d3.selectAll(".mouse-per-line circle")
+    //       .style("opacity", "0");
+    //     d3.selectAll(".mouse-per-line text")
+    //       .style("opacity", "0");
+    //   })
+    //   .on('mouseover', function() { // on mouse in show line, circles and text
+    //     d3.select(".mouse-line")
+    //       .style("opacity", "1");
+    //     d3.selectAll(".mouse-per-line circle")
+    //       .style("opacity", "1");
+    //     d3.selectAll(".mouse-per-line text")
+    //       .style("opacity", "1");
+    //   })
+    //   .on('mousemove', function() { // mouse moving over canvas
+    //     var mouse = d3.mouse(this);
+    //     d3.select(".mouse-line")
+    //       .attr("d", function() {
+    //         var d = "M" + mouse[0] + "," + height;
+    //         d += " " + mouse[0] + "," + 0;
+    //         return d;
+    //       });
+    //
+    //     d3.selectAll(".mouse-per-line")
+    //       .attr("transform", function(d, i) {
+    //         console.log(width/mouse[0])
+    //         var xDate = x.invert(mouse[0]),
+    //             bisect = d3.bisector(function(d) { return d.date; }).right;
+    //             idx = bisect(d.values, xDate);
+    //
+    //         var beginning = 0,
+    //             end = lines[i].getTotalLength(),
+    //             target = null;
+    //
+    //         while (true){
+    //           target = Math.floor((beginning + end) / 2);
+    //           pos = lines[i].getPointAtLength(target);
+    //           if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+    //               break;
+    //           }
+    //           if (pos.x > mouse[0])      end = target;
+    //           else if (pos.x < mouse[0]) beginning = target;
+    //           else break; //position found
+    //         }
+    //
+    //         d3.select(this).select('text')
+    //           .text(y.invert(pos.y).toFixed(2));
+    //
+    //         return "translate(" + mouse[0] + "," + pos.y +")";
+    //       });
+    //   });
+
+
+
+
 
 
     // tooltip events
@@ -153,7 +285,8 @@ function calculateHistory(dates, hist1, hist2, p1, p2, asset1_name, asset2_name)
         .style('display', 'block')
         .style('opacity', '1')
         .style('left', xCoord - 75 + "px")
-        .style('top', y(value_[2]) + 10 + "px")
+        .style('top', 0 + "px")
+        // .style('top', y(value_[2]) + 10 + "px")
         // .style('left', xCoord - 60 + "px")
         // .style('top', y(value_[2]) + 10 + "px")
     });

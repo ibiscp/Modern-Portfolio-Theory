@@ -1,3 +1,5 @@
+var marginPCA = {top: 40, right: 50, bottom: 50, left: 70};
+
 var pca = d3.select('#pca')
   .append('svg')
     .attr('width', '100%')
@@ -75,25 +77,25 @@ d3.json("data.txt")
       .style('z-index', '1000001');
 
   // Graph margins
-  var x_max = d3.max(pca_data, function(d) {return d.pc1})
-  var x_min = d3.min(pca_data, function(d) {return d.pc1})
+  var x_max = 3 //d3.max(pca_data, function(d) {return d.pc1})
+  var x_min = -3 //d3.min(pca_data, function(d) {return d.pc1})
   var x_margin = (x_max - x_min) * 0.1
-  var y_max = d3.max(pca_data, function(d) {return d.pc2})
-  var y_min = d3.min(pca_data, function(d) {return d.pc2})
+  var y_max = 3//d3.max(pca_data, function(d) {return d.pc2})
+  var y_min = -3//d3.min(pca_data, function(d) {return d.pc2})
   var y_margin = (y_max - y_min) * 0.1
 
   // Build X scales and axis
   var x = d3.scaleLinear()
     .domain([x_min - x_margin, x_max + x_margin])
-    .range([widthPCA - margin.bottom, margin.top]);
-  x_axis_PCA.attr("transform", `translate(0,${heightPCA - margin.bottom})`)
+    .range([widthPCA - marginPCA.bottom, marginPCA.top]);
+  x_axis_PCA.attr("transform", `translate(0,${heightPCA - marginPCA.bottom})`)
     .call(d3.axisBottom(x));
 
   // Build Y scales and axis
   var y = d3.scaleLinear()
     .domain([y_min - y_margin, y_max + y_margin])
-    .range([heightPCA - margin.bottom, margin.top]);
-  y_axis_PCA.attr("transform", `translate(${margin.left},0)`)
+    .range([heightPCA - marginPCA.bottom, marginPCA.top]);
+  y_axis_PCA.attr("transform", `translate(${marginPCA.left},0)`)
     .call(d3.axisLeft(y));
 
   // Add the dots

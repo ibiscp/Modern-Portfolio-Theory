@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cbf5da01-5477-4cc0-9f09-61e5610af09c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/autocomplete.js" beforeDir="false" afterPath="$PROJECT_DIR$/autocomplete.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dca.js" beforeDir="false" afterPath="$PROJECT_DIR$/dca.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/history.js" beforeDir="false" afterPath="$PROJECT_DIR$/history.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pca.js" beforeDir="false" afterPath="$PROJECT_DIR$/pca.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/riskreturn.js" beforeDir="false" afterPath="$PROJECT_DIR$/riskreturn.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/variables.js" beforeDir="false" afterPath="$PROJECT_DIR$/variables.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

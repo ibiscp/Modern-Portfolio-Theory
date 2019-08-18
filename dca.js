@@ -40,7 +40,7 @@ var moneyLineDCA = dca.append("path")
             .attr("class", "money")
             .attr("fill", "none")
             .attr("stroke", "grey")
-            .attr("stroke-width", 3);
+            .attr("stroke-width", 1.0);
 
 // Creates legends
 dca.append("text")
@@ -166,17 +166,22 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
     var percentage = ((data.slice(-1)[0]["portfolio"] - data.slice(-1)[0]["money"])/data.slice(-1)[0]["money"]*100).toFixed(2)
     document.getElementById("percent_change").innerHTML = percentage + " %";
 
-    // var up = document.getElementById("up");
-    // var down = document.getElementById("down");
-    //
-    // if (percentage >= 0){
-    //   up.style.display = "block";
-    //   down.style.display = "none";
-    // }
-    // else {
-    //   down.style.display = "block";
-    //   up.style.display = "none";
-    // }
+    var up = document.getElementById("up");
+    var down = document.getElementById("down");
+    var line = document.getElementById("line");
+
+    if (percentage >= 0){
+      up.style.display = "block";
+      down.style.display = "none";
+      up.style.color = "#5fc27e";
+      line.style.color = "#5fc27e";
+    }
+    else {
+      down.style.display = "block";
+      up.style.display = "none";
+      down.style.color = "#f44455";
+      line.style.color = "#f44455";
+    }
 
     // Graph margins
     var y_max = d3.max(data, function(d) { return d3.max([d.asset1, d.asset2, d.portfolio, d.money])})
@@ -188,6 +193,7 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
       .domain(d3.extent(data, d => d.date))
       .range([margin.left, widthDCA - margin.right]);
     x_axis_DCA.attr("transform", `translate(0,${heightDCA - margin.bottom})`)
+      .transition().duration(1000)
       .call(d3.axisBottom(x)
         .ticks(widthDCA / 50));
 
@@ -197,7 +203,8 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
       .range([heightDCA - margin.bottom, margin.top]);
       // .base(10);
     y_axis_DCA.attr("transform", `translate(${margin.left},0)`)
-      .call(d3.axisLeft(y));
+      .transition().duration(1000)
+        .call(d3.axisLeft(y));
 
     // Generate lines
     // Portfolio
@@ -254,12 +261,13 @@ function calculateDCA(dates, hist1, hist2, p1, p2, asset1_name, asset2_name){
                         <div><font color="steelblue">Portfolio: $ ${parseFloat(value_[2]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</font></div>
                         <div><font color="green">${asset1_name}: $ ${parseFloat(value_[0]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</font></div>
                         <div><font color="red">${asset2_name}: $ ${parseFloat(value_[1]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</font></div>
-                        <div><font color="gray">Investeed: $ ${parseFloat(value_[3]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</font></div>
+                        <div><font color="gray">Invested: $ ${parseFloat(value_[3]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</font></div>
                         </div>`)
         .style('display', 'block')
         .style('opacity', '1')
         .style('left', xCoord - 75 + "px")
-        .style('top', y(value_[2]) + 10 + "px")
+        .style('top', 0 + "px")
+        // .style('top', y(value_[2]) + 10 + "px")
     });
     dca.on("mouseleave", function() {
       d3.select(this).attr("r", 4)

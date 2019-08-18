@@ -15,7 +15,7 @@ header{
     justify-content:center;
     position:relative;
     width:100%;
-    height:300px;
+    height:400px;
     margin-top:20px
 }
 svg{
@@ -24,15 +24,15 @@ svg{
 .tooltip{
     border-radius:5px;
     padding:5px;
-    box-sizing:border-box;
+    /* box-sizing:border-box; */
     width:150px;
-    text-align:left;
+    text-align:center;
     font-size:11px;
-    background-color:rgba(0,0,0,.8);
-    color:#fff
+    background-color: white;
+    border: 1px solid steelblue;
 }
 .money {
-  color: rgb(77, 221, 94);
+  color: black;
   text-align: center;
 }
 h1{
@@ -54,6 +54,8 @@ h1{
     cursor:pointer;
     text-align:center
 }
+
+
 fieldset{
     text-align:center;
     border:0
@@ -169,3 +171,16 @@ input, select {
 td.active {
     border-right: 5px solid white;
 }
+
+
+
+
+
+
+
+
+/* .line {
+      fill: none;
+      stroke: steelblue;
+      stroke-width: 1.5px;
+    } */

@@ -1,3 +1,5 @@
+var marginRR = {top: 40, right: 50, bottom: 50, left: 70};
+
 const mpt = d3.select('#mpt')
   .append('svg')
     .attr('width', '100%')
@@ -118,19 +120,21 @@ function plotMPT(){
       // Build X scales and axis
       const x = d3.scaleLinear()
         .domain([d3.min(mpt_data, d => d.risk) - x_margin, d3.max(mpt_data, d => d.risk) + x_margin])
-        .range([margin.left, width_mpt - margin.right]);
+        .range([marginRR.left, width_mpt - marginRR.right]);
 
 
-      x_mpt.attr("transform", `translate(0,${height_mpt - margin.bottom})`)
+      x_mpt.attr("transform", `translate(0,${height_mpt - marginRR.bottom})`)
+      .transition().duration(1000)
         .call(d3.axisBottom(x)
           .ticks(width_mpt / 50));
 
       // Build Y scales and axis
       const y = d3.scaleLinear()
         .domain([d3.min(mpt_data, d => d.return) - y_margin, d3.max(mpt_data, d => d.return) + y_margin])
-        .range([height_mpt - margin.bottom, margin.top]);
+        .range([height_mpt - marginRR.bottom, marginRR.top]);
 
-      y_mpt.attr("transform", `translate(${margin.left},0)`)
+      y_mpt.attr("transform", `translate(${marginRR.left},0)`)
+      .transition().duration(1000)
         .call(d3.axisLeft(y));
 
       // Generate line
@@ -149,9 +153,9 @@ function plotMPT(){
       efficientLine.transition()
             .duration(1000)
         .attr("x1", x(d3.min(mpt_data, d => d.risk)))
-        .attr("y1", 0 + margin.top)
+        .attr("y1", 0 + marginRR.top)
         .attr("x2", x(d3.min(mpt_data, d => d.risk)))
-        .attr("y2", height_mpt - margin.bottom);
+        .attr("y2", height_mpt - marginRR.bottom);
 
       var frontier = mpt_data.reduce(function(res, obj) {return (obj.risk < res.risk) ? obj : res;})
       calculateHistory(dates, data_1, data_2, frontier.asset_1, frontier.asset_2, asset_1, asset_2)
