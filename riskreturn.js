@@ -97,6 +97,7 @@ function plotMPT(){
 
       // Calculate correlation
       correlation = correlation_(data_1, data_2)
+      document.getElementById("correlation_index").innerHTML = correlation.toFixed(2)
 
       // Generate data to plot
       var mpt_data = []
