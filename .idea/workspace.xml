@@ -1,33 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cbf5da01-5477-4cc0-9f09-61e5610af09c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/all_stocks_5yr.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/autocomplete.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d3/d3-time-format.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d3/d3.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d3/data2grid.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d3/jquery.csv.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d3/math.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d3/pca.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d3/pca.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/S&amp;P 500 Historical Data.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/SLG Historical Data.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/test.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/test2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/test20.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dca.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/history.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pca.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pca.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/riskreturn.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saved.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/variables.js" beforeDir="false" />
-    </list>
+    <list default="true" id="cbf5da01-5477-4cc0-9f09-61e5610af09c" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +23,7 @@
         <entry file="file://$PROJECT_DIR$/code/pca.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="248">
-              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+              <caret line="27" selection-start-line="27" selection-end-line="27" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -195,7 +169,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3287037" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.35204083" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.35204083" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -255,7 +229,7 @@
     <entry file="file://$PROJECT_DIR$/code/pca.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="248">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
