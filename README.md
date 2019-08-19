@@ -10,4 +10,7 @@ The source code of this project can be found on [GitHub](https://github.com/ibis
 
 <p align="center">
 <img src="report/images/pca.png" width="900"/><br>
+<img src="report/images/mpt.png" width="900"/><br>
+<img src="report/images/history.png" width="900"/><br>
+<img src="report/images/dca.png" width="900"/><br>
 </p>
